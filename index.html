@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ajánlások — közös munkánk motorja</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0F1530;
+    --navy2:#1B2350;
+    --pink:#E63E78;
+    --pink-soft:#FCE4ED;
+    --black:#0A0A0C;
+    --white:#FFFFFF;
+    --gray-100:#F5F5F7;
+    --gray-200:#E8E8EC;
+    --gray-400:#9498A6;
+    --gray-600:#5A5E6D;
+    --green:#1E9E5A;
+    --green-soft:#E3F6EA;
+    --radius:16px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--gray-100);
+    color:var(--black);
+    font-family:'Poppins',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1200px;margin:0 auto;padding:0 0 90px;}
+
+  .hero{
+    background:var(--navy);
+    background-image:radial-gradient(circle at 85% 0%, rgba(230,62,120,.35), transparent 55%);
+    color:#fff;
+    padding:44px 32px 36px;
+    border-radius:0 0 28px 28px;
+    margin-bottom:8px;
+  }
+  .hero-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;}
+  .hero h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(28px,3.6vw,42px);margin:0;letter-spacing:-.01em;}
+  .hero .sub{color:#C7CBE0;font-size:14.5px;margin-top:6px;max-width:520px;}
+  .pill{font-size:12.5px;font-weight:700;background:var(--pink);color:#fff;padding:8px 16px;border-radius:999px;white-space:nowrap;}
+  .hero-steps{display:flex;gap:10px;margin-top:28px;flex-wrap:wrap;}
+  .hero-step{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:9px 14px;font-size:12.5px;color:#D7DAEC;display:flex;align-items:center;gap:8px;}
+  .hero-step b{color:#fff;font-family:'Poppins',sans-serif;font-weight:600;}
+
+  .nav{display:flex;gap:8px;flex-wrap:wrap;padding:18px 32px 0;}
+  .nav a{text-decoration:none;font-size:12.5px;font-weight:700;color:var(--navy2);background:#fff;border:1.5px solid var(--gray-200);padding:8px 14px;border-radius:999px;}
+  .nav a:hover{border-color:var(--pink);color:var(--pink);}
+
+  .content{padding:0 32px;}
+
+  .sec{margin-top:46px;}
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px;}
+  .sec-num{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:34px;color:var(--gray-200);line-height:1;}
+  .sec-head h2{font-family:'Poppins',sans-serif;font-size:23px;font-weight:600;margin:0;color:var(--navy);}
+  .sec-hint{color:var(--gray-600);font-size:13.5px;margin:4px 0 18px;max-width:640px;}
+
+  .accordion-item{background:#fff;border:1.5px solid var(--gray-200);border-radius:var(--radius);margin-bottom:10px;overflow:hidden;}
+  .acc-head{width:100%;background:none;border:none;display:flex;align-items:center;justify-content:space-between;padding:18px 20px;cursor:pointer;text-align:left;}
+  .acc-head .ttl{display:flex;align-items:center;gap:12px;}
+  .acc-head .badge{width:30px;height:30px;border-radius:50%;background:var(--pink-soft);color:var(--pink);font-family:'Poppins',sans-serif;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .acc-head span.label{font-weight:700;font-size:15px;color:var(--navy);}
+  .acc-head .chev{color:var(--gray-400);font-size:18px;transition:transform .2s;}
+  .accordion-item.open .chev{transform:rotate(180deg);color:var(--pink);}
+  .accordion-item.open .acc-head .badge{background:var(--pink);color:#fff;}
+  .acc-body{max-height:0;overflow:hidden;transition:max-height .25s ease;padding:0 20px;}
+  .accordion-item.open .acc-body{padding:0 20px 20px;}
+  .acc-body ul{margin:0;padding-left:18px;color:var(--gray-600);font-size:14px;line-height:1.7;}
+  .acc-body li{margin-bottom:8px;}
+  .acc-body li b{color:var(--navy);}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:10px;}
+  .obj-btn{background:#fff;border:1.5px solid var(--gray-200);border-radius:var(--radius);padding:16px 16px;text-align:left;cursor:pointer;font-size:14px;font-weight:700;color:var(--navy);transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease;line-height:1.35;}
+  .obj-btn:hover{transform:translateY(-2px);box-shadow:0 10px 22px -12px rgba(15,21,48,.25);border-color:var(--pink);}
+  .obj-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .obj-btn .num{display:block;font-family:'Poppins',sans-serif;font-size:11px;color:var(--pink);margin-bottom:6px;letter-spacing:.05em;}
+  .obj-btn.active .num{color:#F4A2C0;}
+
+  .answer-panel{grid-column:1/-1;background:var(--navy);background-image:linear-gradient(120deg, var(--navy), var(--navy2));color:#fff;border-radius:var(--radius);padding:22px 26px;display:none;animation:fadeIn .25s ease;position:relative;}
+  .answer-panel.show{display:block;}
+  .answer-panel .close-x{position:absolute;top:14px;right:16px;background:none;border:none;color:#aab3cc;font-size:18px;cursor:pointer;}
+  .answer-panel .label{font-family:'Poppins',sans-serif;color:#F4A2C0;font-size:12px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+  .answer-panel p{margin:0;font-size:15.5px;line-height:1.6;max-width:760px;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+
+  .redflag{margin-top:16px;background:var(--pink-soft);border:1px solid #F4B7CC;border-radius:var(--radius);padding:14px 18px;font-size:13.5px;color:#8A1F47;}
+  .redflag b{color:var(--pink);}
+  .redflag .words{font-family:'Poppins',sans-serif;font-weight:600;}
+
+  .source-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+  @media (max-width:760px){.source-row{grid-template-columns:repeat(2,1fr);}}
+  .source-bubble{background:var(--navy);color:#fff;border:none;border-radius:18px;padding:24px 14px;text-align:center;cursor:pointer;font-family:'Poppins',sans-serif;font-size:16.5px;font-weight:600;transition:transform .15s ease, background .15s ease;}
+  .source-bubble:hover{transform:translateY(-3px) scale(1.02);}
+  .source-bubble.active{background:var(--pink);}
+  .source-bubble .emoji{display:block;font-size:25px;margin-bottom:8px;}
+
+  .source-row.small{gap:8px;margin-bottom:6px;}
+  .source-row.small .source-bubble{
+    background:#E8F1FB;border:1.5px solid #CFE2F5;color:var(--navy);
+    padding:9px 12px;font-size:12.5px;border-radius:10px;
+    display:flex;align-items:center;justify-content:center;gap:6px;
+    box-shadow:none;
+  }
+  .source-row.small .source-bubble:hover{border-color:var(--pink);transform:none;}
+  .source-row.small .source-bubble.active{background:var(--pink-soft);border-color:var(--pink);color:var(--pink);}
+  .source-row.small .source-bubble .emoji{display:inline;font-size:14px;margin-bottom:0;}
+
+  .sub-sec-label{
+    font-family:'Poppins',sans-serif;font-weight:700;font-size:12.5px;
+    text-transform:uppercase;letter-spacing:.06em;color:var(--gray-400);
+    margin:22px 0 10px;
+  }
+  .sub-sec-label:first-of-type{margin-top:0;}
+
+  .sub-bubbles{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;padding:18px;background:var(--pink-soft);border-radius:var(--radius);display:none;}
+  .sub-bubbles.show{display:flex;animation:pop .3s ease;}
+  @keyframes pop{from{opacity:0;transform:scale(.92);}to{opacity:1;transform:scale(1);}}
+  .chip{background:#fff;border:1.5px solid var(--pink);color:var(--navy);padding:9px 16px;border-radius:999px;font-size:13.5px;font-weight:600;}
+
+  .script-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  @media (max-width:900px){.script-grid{grid-template-columns:1fr;}}
+  .script-card{background:#fff;border:1.5px solid var(--gray-200);border-radius:var(--radius);padding:18px 20px;transition:background .2s ease;}
+  .script-card:hover{animation:pulseGreen 1.6s ease-in-out infinite;}
+  @keyframes pulseGreen{
+    0%,100%{background:#fff;}
+    50%{background:var(--green-soft);}
+  }
+  .script-static-text{margin:0;font-size:13px;line-height:1.6;color:var(--gray-600);}
+  .script-card h3{font-family:'Poppins',sans-serif;font-size:14.5px;margin:0 0 10px;color:var(--navy);display:flex;justify-content:space-between;align-items:center;}
+  .sms-box{width:100%;min-height:90px;border:1px solid var(--gray-200);border-radius:10px;padding:16px;font-family:'Poppins',sans-serif;font-size:14px;line-height:1.6;color:var(--black);background:var(--gray-100);}
+  .copy-btn{border:none;background:var(--pink);color:#fff;font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:999px;cursor:pointer;}
+  .copy-btn.copied{background:var(--navy);}
+
+  .redword{color:var(--pink);font-weight:700;}
+  .sec-head-toggle{
+    width:100%;background:none;border:none;cursor:pointer;padding:0;
+    text-align:left;justify-content:flex-start;
+  }
+  .sec-head-toggle .faq-chev{
+    margin-left:auto;color:var(--gray-400);font-size:20px;transition:transform .2s;
+  }
+  .sec-head-toggle.open .faq-chev{transform:rotate(180deg);color:var(--pink);}
+  .faq-open-hint{
+    font-size:11.5px;font-weight:600;color:var(--gray-400);
+    background:var(--gray-100);border:1px solid var(--gray-200);
+    padding:4px 10px;border-radius:999px;margin-left:6px;
+  }
+  .sec-head-toggle.open .faq-open-hint{display:none;}
+
+  .rating-card{
+    background:#fff;border:1.5px solid var(--gray-200);border-radius:var(--radius);
+    padding:30px 26px;text-align:center;
+  }
+  .rating-q{font-family:'Poppins',sans-serif;font-weight:700;font-size:17px;color:var(--navy);margin-bottom:18px;}
+  .stars-row{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;}
+  .star-btn{
+    background:none;border:none;cursor:pointer;font-size:30px;line-height:1;
+    color:var(--gray-200);transition:transform .15s ease, color .15s ease;
+    padding:2px;position:relative;
+  }
+  .star-btn:hover{transform:scale(1.15);}
+  .star-btn.active{transform:scale(1.05);}
+  .rating-reaction{margin-top:14px;font-size:14px;font-weight:600;color:var(--gray-600);min-height:20px;}
+  .falling-star{
+    position:fixed;top:0;left:0;font-size:18px;pointer-events:none;z-index:9999;
+    animation:fallDown 1.6s ease-in forwards;
+  }
+  @keyframes fallDown{
+    0%{opacity:1;transform:translateY(0) rotate(0deg);}
+    100%{opacity:0;transform:translateY(100vh) rotate(360deg);}
+  }
+  .falling-star.shoot-up{animation:shootUp 1.6s ease-out forwards;}
+  @keyframes shootUp{
+    0%{opacity:1;transform:translateY(0) rotate(0deg);}
+    100%{opacity:0;transform:translateY(-100vh) rotate(-360deg);}
+  }
+
+  .faq-body{max-height:0;overflow:hidden;transition:max-height .3s ease;}
+  .faq-body.show{max-height:4000px;margin-top:18px;}
+
+  .accordion-item.green-item{border-color:var(--green);}
+  .accordion-item.green-item .acc-head .badge{background:var(--green-soft);color:var(--green);}
+  .accordion-item.green-item.open .acc-head .badge{background:var(--green);color:#fff;}
+  .accordion-item.green-item .acc-head span.label{color:var(--green);}
+  .accordion-item.green-item.open .chev{color:var(--green);}
+
+  .cta-wrap{margin-top:50px;text-align:center;}
+  .cta-btn{
+    display:inline-block;
+    background:var(--green);
+    color:#fff;
+    font-family:'Poppins',sans-serif;
+    font-weight:700;
+    font-size:16px;
+    text-decoration:none;
+    padding:16px 34px;
+    border-radius:999px;
+    box-shadow:0 14px 30px -12px rgba(30,158,90,.5);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .cta-btn:hover{transform:translateY(-2px);box-shadow:0 18px 36px -12px rgba(30,158,90,.6);}
+  footer{margin-top:24px;text-align:center;color:var(--gray-400);font-size:12px;}
+</style>
+</head>
+<body>
+
+<div id="pwGate" style="position:fixed;inset:0;background:#0F1530;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:'Poppins',sans-serif;">
+  <div style="background:#fff;border-radius:16px;padding:36px 32px;max-width:320px;width:90%;text-align:center;box-shadow:0 20px 50px -20px rgba(0,0,0,.5);">
+    <div style="font-size:28px;margin-bottom:10px;">🔒</div>
+    <div style="font-weight:700;font-size:15px;color:#0F1530;margin-bottom:16px;">Belső használatra — kérjük add meg a jelszót</div>
+    <input id="pwInput" type="password" placeholder="Jelszó" style="width:100%;padding:10px 12px;border:1.5px solid #E8E8EC;border-radius:8px;font-size:14px;margin-bottom:12px;box-sizing:border-box;">
+    <div id="pwError" style="color:#E63E78;font-size:12.5px;min-height:16px;margin-bottom:8px;"></div>
+    <button id="pwSubmit" style="width:100%;background:#1E9E5A;color:#fff;border:none;padding:11px;border-radius:999px;font-weight:700;font-size:14px;cursor:pointer;font-family:'Poppins',sans-serif;">Belépés</button>
+  </div>
+</div>
+<script>
+(function(){
+  const PASSWORD = "10ajánlástkapok";
+  const gate = document.getElementById('pwGate');
+  if(sessionStorage.getItem('ajanlasok_ok') === '1'){
+    gate.style.display = 'none';
+  }
+  function tryLogin(){
+    const val = document.getElementById('pwInput').value;
+    if(val === PASSWORD){
+      sessionStorage.setItem('ajanlasok_ok','1');
+      gate.style.display = 'none';
+    } else {
+      document.getElementById('pwError').textContent = 'Helytelen jelszó, próbáld újra.';
+    }
+  }
+  document.getElementById('pwSubmit').onclick = tryLogin;
+  document.getElementById('pwInput').addEventListener('keydown', e=>{ if(e.key==='Enter') tryLogin(); });
+})();
+</script>
+<div class="wrap">
+
+  <div class="hero">
+    <div class="hero-top">
+      <div>
+        <h1>🌟 Ajánlások — közös munkánk motorja</h1>
+      </div>
+      
+    </div>
+    <div class="hero-steps">
+      <div class="hero-step"><b>1</b> Folyamat átbeszélése</div>
+      <div class="hero-step"><b>2</b> Gyakori kérdések</div>
+      <div class="hero-step"><b>3</b> Ötletek</div>
+      <div class="hero-step"><b>4</b> Felépítő üzenet</div>
+    </div>
+  </div>
+
+  <div class="nav">
+    <a href="#miert">Miért ajánlás</a>
+    <a href="#tananyag">Folyamat</a>
+    <a href="#kifogas">Gyakori kérdések</a>
+    <a href="#forrasok">Ajánlási források</a>
+    <a href="#scriptek">Kommunikáció</a>
+  </div>
+
+  <div class="content">
+
+    <div class="sec" id="ertekeles">
+      <div class="rating-card">
+        <div class="rating-q">1–10-es skálán mennyire tartod értékesnek az eddigi munkánkat?</div>
+        <div class="stars-row" id="starsRow"></div>
+        <div class="rating-reaction" id="ratingReaction"></div>
+      </div>
+    </div>
+
+    <div class="sec" id="miert">
+      <div class="sec-head"><span class="sec-num">01</span><h2>Miért ajánlásokból dolgozunk?</h2></div>
+      <div id="whyWrap"></div>
+    </div>
+
+    <div class="sec" id="tananyag">
+      <div class="sec-head"><span class="sec-num">02</span><h2>Folyamat &amp; együttműködés</h2></div>
+      <div id="accordionWrap"></div>
+    </div>
+
+    <div class="sec" id="kifogas">
+      <button class="sec-head sec-head-toggle" onclick="toggleFaqSection()">
+        <span class="sec-num">03</span><h2>Gyakori kérdések</h2>
+        <span class="faq-open-hint">kattints a megnyitáshoz</span>
+        <span class="chev faq-chev">⌄</span>
+      </button>
+      <div class="faq-body" id="faqBody">
+        <div class="grid" id="objGrid"></div>
+        <div class="redflag">
+          <b>🚫 Kerülendő szavak a beszélgetésben:</b>
+          <span class="words">ügynök · bróker · biztosítós · alkusz · bankos · ügyintéző</span> —
+          helyette: <b>elemző / független tanácsadó</b>.
+        </div>
+      </div>
+    </div>
+
+    <div class="sec" id="forrasok">
+      <div class="sec-head"><span class="sec-num">04</span><h2>Kit érdemes ajánlani?</h2></div>
+
+      <div class="sub-sec-label">Ötletek a hétköznapokból</div>
+      <div class="source-row small" id="sourceRow"></div>
+
+      <div class="sub-sec-label">Ötletek témakörök alapján</div>
+      <div class="source-row small" id="sourceRow2"></div>
+    </div>
+
+    <div class="sec" id="scriptek">
+      <div class="sec-head"><span class="sec-num">05</span><h2>Felkészítés — kommunikációs javaslatok</h2></div>
+      <div class="sec-hint">A felépítő SMS és bemutatkozó hívás-szöveg, amit az ajánló / Te küldesz tovább.</div>
+      <div class="script-grid">
+        <div class="script-card">
+          <h3>📱 SMS verzió 1.0 <button class="copy-btn" data-target="sms1">Másolás</button></h3>
+          <div class="sms-box" id="sms1">Figyelmedbe ajánlanám egy kapcsolatomat, fog keresni, hallgasd meg mert nagyon jó dolgokat javasolt pénzügyek kapcsán. Nem fog eladni semmit, vannak hasznos ötletei és nekem is segített.</div>
+        </div>
+        <div class="script-card">
+          <h3>📱 SMS verzió 2.0 <button class="copy-btn" data-target="sms2">Másolás</button></h3>
+          <div class="sms-box" id="sms2">Szeretnélek egy kiváló kapcsolatom figyelmébe ajánlani, akivel tartom a kapcsolatot pénzügyek terén. Lehetnek olyan infói amik értékesek lehetnek neked is, nem fog eladni semmit, nem bankban dolgozik.</div>
+        </div>
+        <div class="script-card">
+          <h3>3. megoldás — Rád bízom</h3>
+          <p class="script-static-text">A harmadik megoldás az, hogy 100%-ban rám bízod az ajánlásokat, ha nincs kedved értesíteni őket, vagy átnézzük most együtt, hogy kik azok, akiknek fixen elküldöd az üzenetet a megkeresésem előtt, és kik azok, akikkel úgy vagy, hogy simán kereshetem őket már akár holnap.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="cta-wrap">
+    <a href="https://eu.jotform.com/srinforms/ajanlasok2025" id="jotformCta" class="cta-btn" target="_blank" rel="noopener">📝 Ajánlások rögzítése</a>
+  </div>
+
+  <footer>Belső használatra — élő ügyfél-beszélgetés támogatására.</footer>
+</div>
+
+<script>
+const accordionData = [
+  {title:"Biztonság, diszkréció", items:[
+    "<b>Maximális diszkréció</b> — szigorú, EU-s adatkezelési szabályzat védi az ajánlót és az ajánlottat is.",
+    "Nem call center vagyunk, hanem <b>elemzők / tanácsadók</b> — egyszeri, illedelmes kapcsolatfelvétel történik.",
+    "<b>10-ből 8 alkalommal</b> születik időpont — a maradék kettőben már van tanácsadójuk, vagy épp nem aktuális."
+  ]},
+  {title:"Felépítés, ajánlott személyek értesítése", items:[
+    "<b>Tilos mondatok:</b> „érdekel pénzügyi tanácsadás?”, „nem akarsz kötni valamit?” — ezekre mi magunk is nemet mondanánk.",
+    "Adunk 2 féle, bizonyítottan jól működő sablon üzenetet, amit minimálisan személyre lehet szabni, de nem érdemes tőle eltérni.",
+    "Az évtizedes tapasztalat azt mutatja, hogy a rövid, tömör üzenet működik jól — ezzel nem dolgoztatjuk ügyfeleinket, és nem kell a munkánkat értékesíteniük, magyarázniuk."
+  ]},
+  {title:"Csúcsminőségű ajánlás — kit érdemes ajánlani", items:[
+    "20 és 60 éves kor közt mindenki, aki <b>gazdaságilag aktív</b>, és megosztanál vele egy jó ötletet.",
+    "A legjobb ajánlások: <b>legjobb barát, testvér, unokatestvér, kollégák, cégtársak, sporttársak, szomszéd</b>.",
+    "Az ajánlás <b>ingyenes elemzést</b> kap — nem kell tudnia előre, milyen témában kér majd segítséget."
+  ]}
+];
+
+const objections = [
+  {q:"Tudni fogja, hogy nekem mit intézel?", a:"Határozottan nem. Szigorúan kettőnkre tartozik, ami a Te pénzügyeidet illeti. Saját pozitív élményeiről persze mesélhet magától, ha akar."},
+  {q:"Mit mondasz neki, amikor felhívod?", a:"Egy rövid, illedelmes bemutatkozás: elmondom, hogy közös ismerősünk van, hogy nem értékesítek telefonon, és felajánlok egy időpontot egy órás, kötetlen elemzésre. 2 perc, és ő dönt."},
+  {q:"Nem akarok felelősséget vállalni azért, hogy mit csináltok", a:"Nem az eredményért vállalsz felelősséget, csak azért, hogy összekötsz két embert. Onnantól minden szakmai és jogi felelősség az enyém."},
+  {q:"Miért kell előre odaadnod az ajánlásokat?", a:"Kölcsönös bizalom miatt. Ha előre megkapom, biztos lehetsz benne, hogy körültekintően, jól felépítve közelítem meg őket — a Te bizalmadért és az övékért is felelek."},
+  {q:"Miért nem jó, ha akkor ajánlasz, mikor éppen szóba kerül pénzügyi téma?", a:"Mert akkor nekem kellene magamtól ügyfeleket kutatnom, ami a szakmai minőség rovására megy. Lehet, hogy soha nem is futsz bele olyan helyzetbe, hogy valaki pont rákérdez."},
+  {q:"Nem ad az irodád ügyfeleket?", a:"Nem, szerencsére — mindenki saját praxist épít. Ez adja a rendszer stabilitását: senki nem veszi el a másikét, és az enyémet sem viheti el senki."},
+  {q:"Nem szeretném zavarni az ismerőseimet", a:"Én sem szeretném. Ezért nem értékesítési hívást kapnak, hanem egy rövid bemutatkozást — ha nem érdekli őket, ott lezárjuk és nyernek egy jó kapcsolatot a személyemben."},
+  {q:"Nem jut eszembe senki", a:"Teljesen rendben van. Általában amikor elkezdjük végigvenni a családot, munkahelyet, barátokat, szomszédokat, akkor fokozatosan összeáll a lista. Telefon, közösségi média mindenkinek segít!"},
+  {q:"Mi a garancia, hogy az adataikkal jól bánsz?", a:"A nevem és a megbízhatóságom — ezen kívül szigorú, EU-s adatkezelési szabályzat alapján dolgozunk, ami az ajánlót és az ajánlottat is védi."},
+  {q:"Majd később adok", a:"Azért egyeztetjük együtt egy gyors 15 percben, később szinte mindenki elfelejti — közösen velem könnyebb a tapasztalat alapján."}
+];
+
+const sources = [
+  {emoji:"👨‍👩‍👧", title:"Család & rokonság", subs:["testvér","unokatestvér","szülők","keresztszülők","van vagy szeretne gyermeket"]},
+  {emoji:"🤝", title:"Barátok", subs:["legjobb barát","baráti társaság","régi osztálytárs","akivel recepteket / filmeket osztotok meg"]},
+  {emoji:"💼", title:"Munka & üzlet", subs:["kolléga","cégtárs","saját vállalkozása van","ingatlant épít / felújít / venne"]},
+  {emoji:"🏘️", title:"Közösségek", subs:["szomszéd","sporttársak","hobbi kör","hasonló élethelyzetben van mint mi"]}
+];
+
+const sources2 = [
+  {emoji:"👶", title:"Gyermek", subs:["van egy vagy több gyermeke","szeretne gyermeket","családtámogatási rendszer érintheti"]},
+  {emoji:"🏠", title:"Ingatlan", subs:["venne / eladna — lakni vagy befektetni","építkezne, építkezik","felújítaná, felújításban van"]},
+  {emoji:"📈", title:"Vállalkozás", subs:["vállalkozása van, vagy alapítaná","közös projektben vagyok vele","kolléga, kolléganő"]},
+  {emoji:"🪞", title:"Hasonló élethelyzet", subs:["hasonló helyzetben van mint mi magunk","barátok vagyunk","közös hobbink van"]}
+];
+
+function lerpColor(hex1, hex2, t){
+  const c1 = [parseInt(hex1.slice(1,3),16), parseInt(hex1.slice(3,5),16), parseInt(hex1.slice(5,7),16)];
+  const c2 = [parseInt(hex2.slice(1,3),16), parseInt(hex2.slice(3,5),16), parseInt(hex2.slice(5,7),16)];
+  const r = Math.round(c1[0] + (c2[0]-c1[0])*t);
+  const g = Math.round(c1[1] + (c2[1]-c1[1])*t);
+  const b = Math.round(c1[2] + (c2[2]-c1[2])*t);
+  return `rgb(${r},${g},${b})`;
+}
+
+const starColors = [];
+for(let i=1;i<=10;i++){
+  starColors.push(lerpColor('#E63E3E', '#1E9E5A', (i-1)/9));
+}
+
+const starsRow = document.getElementById('starsRow');
+for(let i=1;i<=10;i++){
+  const btn = document.createElement('button');
+  btn.className='star-btn';
+  btn.textContent='☆';
+  btn.dataset.val = i;
+  btn.onclick = (e)=>rateClick(i, e);
+  starsRow.appendChild(btn);
+}
+
+function rateClick(n, evt){
+  const stars = starsRow.querySelectorAll('.star-btn');
+  stars.forEach((s,idx)=>{
+    if(idx < n){
+      s.textContent='★';
+      s.style.color = starColors[idx];
+      s.classList.add('active');
+    } else {
+      s.textContent='☆';
+      s.style.color = '';
+      s.classList.remove('active');
+    }
+  });
+
+  const reactionEl = document.getElementById('ratingReaction');
+  let msg = '';
+  if(n <= 6) msg = 'Köszönjük az őszinte visszajelzést — mire figyeljünk jobban?';
+  else if(n <= 8) msg = 'Örülünk, hogy elégedett vagy! 🙌';
+  else msg = 'Köszönjük, igazán jól esik! 😎';
+  reactionEl.textContent = msg;
+  reactionEl.style.color = starColors[n-1];
+
+  // falling stars burst from click point
+  const rect = evt.target.getBoundingClientRect();
+  const startX = rect.left + rect.width/2;
+  const startY = rect.top + rect.height/2;
+  const shootUp = n >= 8;
+  for(let k=0;k<14;k++){
+    const star = document.createElement('div');
+    star.className='falling-star' + (shootUp ? ' shoot-up' : '');
+    star.textContent='★';
+    star.style.left = (startX + (Math.random()*60-30)) + 'px';
+    star.style.top = startY + 'px';
+    star.style.color = starColors[n-1];
+    star.style.animationDelay = (Math.random()*0.3)+'s';
+    star.style.fontSize = (12 + Math.random()*14)+'px';
+    document.body.appendChild(star);
+    setTimeout(()=>star.remove(), 2200);
+  }
+}
+
+const whyData = [
+  {title:"A díjmentesség megőrzése a kulcs", body:"Ez az egészséges működés alapja, hogy elkerüljük a <span class=\"redword\">hideghívást</span>, amit a legtöbb ember ki nem állhat. A szolgáltatásunk így díjmentes és az is tud maradni, mert nem költünk hirdetésre / hideghívókra — helyette a meglévő, elégedett ügyfeleink ajánlásaiból dolgozunk. Ezért tudunk függetlenek is maradni, mert nem kell egy bank termékét a bevétel miatt erőltetni."},
+  {title:"Mert a legjobb ügyfél ajánláson keresztül jön", body:"Azzal a körrel dolgozunk a legszívesebben, ahol a bizalom már megvan — ahol ételreceptet és filmajánlót is megosztunk egymással egy családi összejövetelen vagy a munkahelyi ebédlőben. Ez nem véletlen, ez a leghatékonyabb módja annak, hogy új ügyfelekhez eljussunk."},
+  {title:"Mert Te is jól jársz vele, nem csak mi", body:"Az ajánlottnak ugyanazt a minőségi elemzést nyújtom, mint amit Te kaptál — így fenntartható nálam a magas minőségű szűrő. Az én napom is 24 órából áll, és ha nem kell új ügyfelek keresgélésével töltenem az időm, akkor ügyfeleim bármikor fordulhatnak hozzám, és nem kell félévente más ügyintézőt keresniük."}
+];
+
+whyData.push({
+  title:"Cél: Ajánlások összegyűjtése",
+  body:"<b style=\"color:var(--green);\">Cél:</b> ügyfeleinkkel közösen összegyűjteni 10 ajánlást — a 10 ajánlás az elégedettség maximumát jelzi, minél jobb egy tanácsadónk ajánlhatósága, annál jobb a szakmai reputációja is az irodai közösségében.<br><br>⚠️ <b>Fontos:</b> az ajánlásokat ügyfeleinkkel közösen gyűjtjük, és beszéljük meg az értesítés módját is, hogy ne érjen senkit váratlanul a megkeresésünk — ezt fogjuk a következő pontban átbeszélni.",
+  green:true
+});
+
+const whyWrap = document.getElementById('whyWrap');
+whyData.forEach((block,i)=>{
+  const item = document.createElement('div');
+  item.className='accordion-item' + (block.green ? ' green-item' : '');
+  item.innerHTML = `
+    <button class="acc-head" onclick="toggleWhy(${i})">
+      <div class="ttl"><span class="badge">${i+1}</span><span class="label">${block.title}</span></div>
+      <span class="chev">⌄</span>
+    </button>
+    <div class="acc-body" id="whybody-${i}"><p style="margin:0;font-size:14px;line-height:1.7;color:var(--gray-600);">${block.body}</p></div>
+  `;
+  whyWrap.appendChild(item);
+});
+function toggleWhy(i){
+  const item = whyWrap.children[i];
+  const body = document.getElementById('whybody-'+i);
+  const isOpen = item.classList.contains('open');
+  item.classList.toggle('open', !isOpen);
+  body.style.maxHeight = isOpen ? '0px' : body.scrollHeight+30+'px';
+}
+
+const accWrap = document.getElementById('accordionWrap');
+accordionData.forEach((block,i)=>{
+  const item = document.createElement('div');
+  item.className='accordion-item';
+  item.innerHTML = `
+    <button class="acc-head" onclick="toggleAcc(${i})">
+      <div class="ttl"><span class="badge">${i+1}</span><span class="label">${block.title}</span></div>
+      <span class="chev">⌄</span>
+    </button>
+    <div class="acc-body" id="accbody-${i}"><ul>${block.items.map(t=>`<li>${t}</li>`).join('')}</ul></div>
+  `;
+  accWrap.appendChild(item);
+});
+function toggleAcc(i){
+  const item = accWrap.children[i];
+  const body = document.getElementById('accbody-'+i);
+  const isOpen = item.classList.contains('open');
+  item.classList.toggle('open', !isOpen);
+  body.style.maxHeight = isOpen ? '0px' : body.scrollHeight+40+'px';
+}
+
+function toggleFaqSection(){
+  const head = document.querySelector('.sec-head-toggle');
+  const body = document.getElementById('faqBody');
+  const isOpen = body.classList.contains('show');
+  body.classList.toggle('show', !isOpen);
+  head.classList.toggle('open', !isOpen);
+}
+
+const objGrid = document.getElementById('objGrid');
+objections.forEach((o,i)=>{
+  const btn = document.createElement('button');
+  btn.className='obj-btn';
+  btn.innerHTML = `<span class="num">KÉRDÉS ${i+1}</span>${o.q}`;
+  btn.onclick = ()=>toggleObjection(i);
+  objGrid.appendChild(btn);
+
+  const panel = document.createElement('div');
+  panel.className='answer-panel';
+  panel.id='panel-'+i;
+  panel.innerHTML = `<button class="close-x" onclick="toggleObjection(${i})">✕</button><div class="label">Válasz</div><p>${o.a}</p>`;
+  objGrid.appendChild(panel);
+});
+function toggleObjection(i){
+  const panel = document.getElementById('panel-'+i);
+  const btn = objGrid.children[i*2];
+  const wasOpen = panel.classList.contains('show');
+  panel.classList.toggle('show', !wasOpen);
+  btn.classList.toggle('active', !wasOpen);
+}
+
+function renderSourceRow(rowId, data, prefix){
+  const row = document.getElementById(rowId);
+  data.forEach((s,i)=>{
+    const btn = document.createElement('button');
+    btn.className='source-bubble';
+    btn.innerHTML = `<span class="emoji">${s.emoji}</span>${s.title}`;
+    btn.onclick = ()=>toggleSourceGeneric(rowId, prefix, i, data.length);
+    row.appendChild(btn);
+  });
+  data.forEach((s,i)=>{
+    const sub = document.createElement('div');
+    sub.className='sub-bubbles';
+    sub.id=prefix+'-'+i;
+    sub.innerHTML = s.subs.map(x=>`<span class="chip">${x}</span>`).join('');
+    row.appendChild(sub);
+  });
+}
+function toggleSourceGeneric(rowId, prefix, i, count){
+  const row = document.getElementById(rowId);
+  for(let j=0;j<count;j++){
+    const sub = document.getElementById(prefix+'-'+j);
+    const btn = row.children[j];
+    if(j===i){
+      const wasOpen = sub.classList.contains('show');
+      sub.classList.toggle('show', !wasOpen);
+      btn.classList.toggle('active', !wasOpen);
+    }
+  }
+}
+renderSourceRow('sourceRow', sources, 'sub');
+renderSourceRow('sourceRow2', sources2, 'sub2');
+
+document.querySelectorAll('.copy-btn').forEach(b=>{
+  b.onclick = ()=>{
+    const el = document.getElementById(b.dataset.target);
+    const text = (el.value !== undefined) ? el.value : el.textContent;
+    navigator.clipboard.writeText(text);
+    b.textContent='Másolva ✓';
+    b.classList.add('copied');
+    setTimeout(()=>{b.textContent='Másolás';b.classList.remove('copied');},1500);
+  };
+});
+</script>
+</body>
+</html>
