@@ -129,8 +129,13 @@
 
   .script-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
   @media (max-width:900px){.script-grid{grid-template-columns:1fr;}}
-  .script-card{background:#fff;border:1.5px solid var(--gray-200);border-radius:var(--radius);padding:18px 20px;transition:background .2s ease;}
+  .script-card{background:#fff;border:1.5px solid var(--gray-200);border-radius:var(--radius);padding:18px 20px;transition:background .2s ease;position:relative;}
   .script-card:hover{animation:pulseGreen 1.6s ease-in-out infinite;}
+  .script-card.wide{grid-column:1/-1;}
+  .bubble-icon{
+    position:absolute;top:14px;right:18px;font-size:20px;
+    background:#E8F1FB;border-radius:50%;padding:6px 8px;line-height:1;
+  }
   @keyframes pulseGreen{
     0%,100%{background:#fff;}
     50%{background:var(--green-soft);}
@@ -472,6 +477,11 @@
         <div class="script-card">
           <h3>3. megoldás — Rád bízom</h3>
           <p class="script-static-text">A harmadik megoldás az, hogy 100%-ban rám bízod az ajánlásokat, ha nincs kedved értesíteni őket, vagy átnézzük most együtt, hogy kik azok, akiknek fixen elküldöd az üzenetet a megkeresésem előtt, és kik azok, akikkel úgy vagy, hogy simán kereshetem őket már akár holnap.</p>
+        </div>
+        <div class="script-card wide" onmouseenter="playMessengerChime()">
+          <span class="bubble-icon">💬</span>
+          <h3>4. megoldás — Közös chat-csoport</h3>
+          <p class="script-static-text">Sok ügyfelünkkel azt is csináljuk, hogy egy közös Messenger-csoportot hoz létre hármunk számára, ahová beküldi a rövid üzenetet — így azonnal archoz tudja kötni a kapcsolatot, majd kilép a csoportból, miután kollégánk és az ajánlott személy egymásra találtak.</p>
         </div>
       </div>
     </div>
@@ -952,6 +962,31 @@ document.querySelectorAll('.copy-btn').forEach(b=>{
     doc.save('ajanlasok.pdf');
   };
 })();
+
+// subtle synthesized "messenger" chime on hover
+let chimePlayed = false;
+function playMessengerChime(){
+  if(chimePlayed) return;
+  chimePlayed = true;
+  setTimeout(()=>{ chimePlayed = false; }, 1200);
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const notes = [880, 1180];
+    notes.forEach((freq, idx)=>{
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.value = 0.0001;
+      osc.connect(gain).connect(ctx.destination);
+      const start = ctx.currentTime + idx*0.09;
+      gain.gain.exponentialRampToValueAtTime(0.06, start+0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start+0.18);
+      osc.start(start);
+      osc.stop(start+0.2);
+    });
+  } catch(e){ /* audio not available, ignore */ }
+}
 </script>
 </body>
 </html>
