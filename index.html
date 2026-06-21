@@ -6,6 +6,7 @@
 <title>Ajánlások — közös munkánk motorja</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
   :root{
     --navy:#0F1530;
@@ -100,7 +101,7 @@
   @media (max-width:760px){.source-row{grid-template-columns:repeat(2,1fr);}}
   .source-bubble{background:var(--navy);color:#fff;border:none;border-radius:18px;padding:24px 14px;text-align:center;cursor:pointer;font-family:'Poppins',sans-serif;font-size:16.5px;font-weight:600;transition:transform .15s ease, background .15s ease;}
   .source-bubble:hover{transform:translateY(-3px) scale(1.02);}
-  .source-bubble.active{background:var(--pink);}
+  .source-bubble.active{background:var(--green);}
   .source-bubble .emoji{display:block;font-size:25px;margin-bottom:8px;}
 
   .source-row.small{gap:8px;margin-bottom:6px;}
@@ -110,8 +111,8 @@
     display:flex;align-items:center;justify-content:center;gap:6px;
     box-shadow:none;
   }
-  .source-row.small .source-bubble:hover{border-color:var(--pink);transform:none;}
-  .source-row.small .source-bubble.active{background:var(--pink-soft);border-color:var(--pink);color:var(--pink);}
+  .source-row.small .source-bubble:hover{border-color:var(--green);transform:none;}
+  .source-row.small .source-bubble.active{background:var(--green-soft);border-color:var(--green);color:var(--green);}
   .source-row.small .source-bubble .emoji{display:inline;font-size:14px;margin-bottom:0;}
 
   .sub-sec-label{
@@ -121,10 +122,10 @@
   }
   .sub-sec-label:first-of-type{margin-top:0;}
 
-  .sub-bubbles{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;padding:18px;background:var(--pink-soft);border-radius:var(--radius);display:none;}
+  .sub-bubbles{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;padding:18px;background:var(--green-soft);border-radius:var(--radius);display:none;}
   .sub-bubbles.show{display:flex;animation:pop .3s ease;}
   @keyframes pop{from{opacity:0;transform:scale(.92);}to{opacity:1;transform:scale(1);}}
-  .chip{background:#fff;border:1.5px solid var(--pink);color:var(--navy);padding:9px 16px;border-radius:999px;font-size:13.5px;font-weight:600;}
+  .chip{background:#fff;border:1.5px solid var(--green);color:var(--navy);padding:9px 16px;border-radius:999px;font-size:13.5px;font-weight:600;}
 
   .script-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
   @media (max-width:900px){.script-grid{grid-template-columns:1fr;}}
@@ -209,6 +210,107 @@
   }
   .cta-btn:hover{transform:translateY(-2px);box-shadow:0 18px 36px -12px rgba(30,158,90,.6);}
   footer{margin-top:24px;text-align:center;color:var(--gray-400);font-size:12px;}
+
+  .slots-layout{display:flex;gap:24px;align-items:flex-start;}
+  .progress-vertical-wrap{
+    display:flex;flex-direction:column;align-items:center;gap:10px;
+    flex-shrink:0;position:sticky;top:140px;
+  }
+  .progress-vertical-track{
+    width:22px;height:320px;background:var(--gray-200);border-radius:999px;overflow:hidden;
+    display:flex;align-items:flex-end;
+  }
+  .progress-vertical-fill{
+    width:100%;height:0%;
+    background:linear-gradient(to top, #E14545, #E6A23E, var(--green));
+    border-radius:999px;transition:height .5s ease;
+  }
+  .progress-label{font-size:12px;font-weight:700;color:var(--navy);text-align:center;max-width:80px;line-height:1.3;}
+  @media (max-width:900px){
+    .slots-layout{flex-direction:column;}
+    .progress-vertical-wrap{
+      flex-direction:row;width:100%;position:static;
+    }
+    .progress-vertical-track{width:100%;height:18px;align-items:stretch;flex-direction:row;}
+    .progress-vertical-fill{width:0%;height:100%;background:linear-gradient(90deg,#E14545,#E6A23E,var(--green));}
+    .progress-label{max-width:none;}
+  }
+  .slots-toolbar{
+    display:flex;align-items:center;justify-content:flex-end;gap:18px;flex-wrap:wrap;margin-bottom:16px;
+  }
+  .pdf-btn{
+    background:var(--navy);color:#fff;border:none;font-weight:700;font-size:13px;
+    padding:10px 18px;border-radius:999px;cursor:pointer;font-family:'Poppins',sans-serif;
+    white-space:nowrap;
+  }
+  .pdf-btn:hover{background:var(--navy2);}
+
+  .slot-card{
+    background:#fff;border:1.5px solid var(--gray-200);border-radius:12px;
+    padding:14px 16px;position:relative;
+    transition:border-color .2s ease, box-shadow .2s ease;
+    animation:slotIn .3s ease;
+  }
+  .slots-col{flex:1;min-width:0;}
+  #slotsWrap{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+  @media (max-width:900px){#slotsWrap{grid-template-columns:1fr;}}
+  .slot-card.complete{border-color:var(--green);box-shadow:0 0 0 3px var(--green-soft);}
+  @keyframes slotIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  .slot-head{
+    display:flex;align-items:center;gap:8px;margin-bottom:10px;
+  }
+  .slot-num{
+    width:22px;height:22px;border-radius:50%;background:var(--gray-100);color:var(--gray-600);
+    font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11px;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .slot-card.complete .slot-num{background:var(--green);color:#fff;}
+  .slot-title{font-weight:700;font-size:12.5px;color:var(--navy);}
+  .slot-check{margin-left:auto;color:var(--green);font-size:14px;opacity:0;transition:opacity .2s ease;}
+  .slot-card.complete .slot-check{opacity:1;}
+
+  .slot-fields{display:flex;flex-direction:column;gap:8px;}
+  .slot-field label{display:block;font-size:10px;font-weight:700;color:var(--gray-400);margin-bottom:3px;text-transform:uppercase;letter-spacing:.03em;}
+  .slot-field input{
+    width:100%;padding:7px 9px;border:1px solid var(--gray-200);border-radius:7px;
+    font-family:'Poppins',sans-serif;font-size:12.5px;color:var(--black);background:var(--gray-100);
+    box-sizing:border-box;
+  }
+  .slot-field input:focus{outline:none;border-color:var(--green);background:#fff;}
+  .slot-field.egyeb textarea{
+    width:100%;min-height:40px;padding:7px 9px;border:1px solid var(--gray-200);border-radius:7px;
+    font-family:'Poppins',sans-serif;font-size:12px;color:var(--black);background:var(--gray-100);
+    box-sizing:border-box;resize:vertical;
+  }
+  .slot-field.egyeb textarea:focus{outline:none;border-color:var(--green);background:#fff;}
+
+  .mini-confetti{
+    position:fixed;top:0;left:0;font-size:22px;pointer-events:none;z-index:9999;
+    animation:confettiPop 1.9s ease-out forwards;
+  }
+  @keyframes confettiPop{
+    0%{opacity:1;transform:translate(0,0) rotate(0deg) scale(1);}
+    100%{opacity:0;transform:translate(var(--dx,30px), -130px) rotate(280deg) scale(1.3);}
+  }
+
+  .grand-confetti{
+    position:fixed;bottom:0;pointer-events:none;z-index:10000;
+    will-change:transform,opacity;
+  }
+  .grand-confetti.emoji{font-size:20px;}
+  .grand-confetti.chip{width:9px;height:9px;border-radius:2px;}
+  @keyframes grandArc{
+    0%{opacity:1;transform:translate(0,0) rotate(0deg);}
+    65%{opacity:1;}
+    100%{opacity:0;transform:translate(var(--dx), var(--dy)) rotate(var(--rot));}
+  }
+
+  @media print{
+    .hero, .nav, #mainContent, .cta-wrap, .side-stat, footer, .pdf-btn{display:none !important;}
+    body{background:#fff;}
+    .slot-card{break-inside:avoid;border-color:#999 !important;box-shadow:none !important;}
+    .progress-vertical-wrap{display:none;}
+  }
 
   .side-stat{
     position:fixed;
@@ -309,7 +411,7 @@
     <a href="#scriptek">Kommunikáció</a>
   </div>
 
-  <div class="content">
+  <div class="content" id="mainContent">
 
     <div class="sec" id="ertekeles">
       <div class="rating-card">
@@ -378,6 +480,24 @@
 
   <div class="cta-wrap">
     <a href="https://eu.jotform.com/srinforms/ajanlasok2025" id="jotformCta" class="cta-btn" target="_blank" rel="noopener">📝 Ajánlások rögzítése</a>
+  </div>
+
+  <div class="content" id="slotsSection">
+    <div class="sec">
+      <div class="sec-head"><span class="sec-num">06</span><h2>Ajánlások</h2></div>
+      <div class="slots-toolbar">
+        <button class="pdf-btn" onclick="downloadSlotsPDF()">📄 PDF letöltése</button>
+      </div>
+      <div class="slots-layout">
+        <div class="progress-vertical-wrap">
+          <div class="progress-vertical-track"><div class="progress-vertical-fill" id="progressFill"></div></div>
+          <div class="progress-label" id="progressLabel">0 / 10 rögzítve</div>
+        </div>
+        <div class="slots-col">
+          <div id="slotsWrap"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <footer>Belső használatra — élő ügyfél-beszélgetés támogatására.</footer>
@@ -633,6 +753,204 @@ document.querySelectorAll('.copy-btn').forEach(b=>{
   }
   window.addEventListener('scroll', updateVisibility, {passive:true});
   updateVisibility();
+})();
+
+// 10-slot progressive referral capture
+(function(){
+  const TOTAL = 10;
+  const BATCH = 3;
+  const wrap = document.getElementById('slotsWrap');
+  const fill = document.getElementById('progressFill');
+  const label = document.getElementById('progressLabel');
+  let visibleCount = 0;
+  let finaleFired = false;
+  const completed = new Array(TOTAL).fill(false);
+
+  function buildSlot(i){
+    const card = document.createElement('div');
+    card.className = 'slot-card';
+    card.id = 'slot-' + i;
+    card.innerHTML = `
+      <div class="slot-head">
+        <span class="slot-num">${i+1}</span>
+        <span class="slot-title">Ajánlás #${i+1}</span>
+        <span class="slot-check">✓</span>
+      </div>
+      <div class="slot-fields">
+        <div class="slot-field">
+          <label>Név / életkor *</label>
+          <input type="text" data-slot="${i}" data-req="1" id="name-${i}" placeholder="pl. Kovács Juliska, 34">
+        </div>
+        <div class="slot-field">
+          <label>Telefonszám *</label>
+          <input type="tel" data-slot="${i}" data-req="1" id="phone-${i}" placeholder="+36 30 000 0000">
+        </div>
+        <div class="slot-field">
+          <label>Honnan ismered? *</label>
+          <input type="text" data-slot="${i}" data-req="1" id="src-${i}" placeholder="pl. kolléga, barátnő">
+        </div>
+        <div class="slot-field egyeb">
+          <label>Egyéb</label>
+          <textarea data-slot="${i}" id="note-${i}" placeholder="Apropó, kontextus, megjegyzés..."></textarea>
+        </div>
+      </div>
+    `;
+    wrap.appendChild(card);
+
+    const nameInput = card.querySelector(`#name-${i}`);
+    const reqInputs = card.querySelectorAll('[data-req="1"]');
+    reqInputs.forEach(inp=>{
+      inp.addEventListener('input', ()=>onSlotInput(i));
+    });
+    nameInput.addEventListener('input', ()=>maybeRevealNext(i));
+  }
+
+  function onSlotInput(i){
+    const card = document.getElementById('slot-'+i);
+    const reqInputs = card.querySelectorAll('[data-req="1"]');
+    const allFilled = Array.from(reqInputs).every(inp=>inp.value.trim().length > 0);
+    if(allFilled && !completed[i]){
+      completed[i] = true;
+      card.classList.add('complete');
+      burstConfetti(card);
+    } else if(!allFilled && completed[i]){
+      completed[i] = false;
+      card.classList.remove('complete');
+    }
+    updateProgress();
+  }
+
+  function maybeRevealNext(i){
+    if(i === visibleCount - 1 && visibleCount < TOTAL){
+      const nameVal = document.getElementById('name-'+i).value.trim();
+      if(nameVal.length > 0){
+        revealBatch();
+      }
+    }
+  }
+
+  function revealBatch(){
+    const next = Math.min(visibleCount + BATCH, TOTAL);
+    for(let i=visibleCount; i<next; i++){
+      buildSlot(i);
+    }
+    visibleCount = next;
+  }
+
+  function updateProgress(){
+    const doneCount = completed.filter(Boolean).length;
+    const pct = Math.round((doneCount / TOTAL) * 100);
+    fill.style.height = pct + '%';
+    label.textContent = `${doneCount} / ${TOTAL} ajánlás rögzítve`;
+    if(doneCount === TOTAL && !finaleFired){
+      finaleFired = true;
+      grandFinale();
+    } else if(doneCount < TOTAL){
+      finaleFired = false;
+    }
+  }
+
+  function grandFinale(){
+    const w = window.innerWidth, h = window.innerHeight;
+    const emojis = ['🎉','✨','⭐','🎊'];
+    const chipColors = ['#E63E78','#1E9E5A','#1B2350','#E6A23E'];
+    const corners = [0, w];
+    corners.forEach(startX=>{
+      for(let k=0;k<22;k++){
+        const useEmoji = Math.random() > 0.45;
+        const piece = document.createElement('div');
+        piece.className = 'grand-confetti ' + (useEmoji ? 'emoji' : 'chip');
+        if(useEmoji){
+          piece.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+        } else {
+          piece.style.background = chipColors[Math.floor(Math.random()*chipColors.length)];
+        }
+        const spreadX = (startX === 0 ? 1 : -1) * (Math.random()*0.5*w + 0.05*w);
+        const riseY = -(Math.random()*0.55*h + 0.15*h);
+        const fallY = riseY + (Math.random()*0.35*h + 0.1*h);
+        piece.style.left = startX + 'px';
+        piece.style.setProperty('--dx', spreadX + 'px');
+        piece.style.setProperty('--dy', fallY + 'px');
+        piece.style.setProperty('--rot', (Math.random()*500-250) + 'deg');
+        piece.style.animation = `grandArc ${2.4 + Math.random()*0.8}s cubic-bezier(.2,.7,.3,1) forwards`;
+        piece.style.animationDelay = (Math.random()*0.4) + 's';
+        document.body.appendChild(piece);
+        setTimeout(()=>piece.remove(), 3600);
+      }
+    });
+  }
+
+  function burstConfetti(card){
+    const rect = card.getBoundingClientRect();
+    const startX = rect.right - 30;
+    const startY = rect.top + 20;
+    const emojis = ['🎉','✨','⭐','🎊'];
+    for(let k=0;k<18;k++){
+      const piece = document.createElement('div');
+      piece.className = 'mini-confetti';
+      piece.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+      piece.style.left = (startX + (Math.random()*80-40)) + 'px';
+      piece.style.top = startY + 'px';
+      piece.style.fontSize = (18 + Math.random()*14) + 'px';
+      piece.style.setProperty('--dx', (Math.random()*120-60)+'px');
+      piece.style.animationDelay = (Math.random()*0.3)+'s';
+      document.body.appendChild(piece);
+      setTimeout(()=>piece.remove(), 2300);
+    }
+  }
+
+  // initial batch
+  revealBatch();
+  updateProgress();
+
+  window.downloadSlotsPDF = function(){
+    if(typeof jspdf === 'undefined'){
+      alert('A PDF-generátor nem töltődött be — ellenőrizd az internetkapcsolatot.');
+      return;
+    }
+    const { jsPDF } = jspdf;
+    const doc = new jsPDF();
+    let y = 18;
+    doc.setFontSize(16);
+    doc.text('Ajánlások — rögzített lista', 14, y);
+    y += 8;
+    doc.setFontSize(10);
+    doc.setTextColor(120);
+    doc.text(new Date().toLocaleDateString('hu-HU'), 14, y);
+    doc.setTextColor(20);
+    y += 10;
+
+    let anyData = false;
+    for(let i=0;i<TOTAL;i++){
+      const nameEl = document.getElementById('name-'+i);
+      if(!nameEl) continue;
+      const name = nameEl.value.trim();
+      if(!name) continue;
+      anyData = true;
+      const phone = (document.getElementById('phone-'+i)||{}).value || '';
+      const src = (document.getElementById('src-'+i)||{}).value || '';
+      const note = (document.getElementById('note-'+i)||{}).value || '';
+
+      if(y > 270){ doc.addPage(); y = 18; }
+      doc.setFontSize(12);
+      doc.setFont(undefined,'bold');
+      doc.text(`${i+1}. ${name}`, 14, y);
+      doc.setFont(undefined,'normal');
+      y += 6;
+      doc.setFontSize(10);
+      doc.text(`Telefon: ${phone || '—'}`, 14, y); y += 5;
+      doc.text(`Honnan ismered: ${src || '—'}`, 14, y); y += 5;
+      if(note){ doc.text(`Egyéb: ${note}`, 14, y); y += 5; }
+      y += 4;
+    }
+
+    if(!anyData){
+      doc.setFontSize(11);
+      doc.text('Még nincs rögzített ajánlás.', 14, y);
+    }
+
+    doc.save('ajanlasok.pdf');
+  };
 })();
 </script>
 </body>
