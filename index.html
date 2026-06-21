@@ -25,7 +25,11 @@
   *{box-sizing:border-box;}
   body{
     margin:0;
-    background:var(--gray-100);
+    background-color:var(--gray-100);
+    background-image:
+      linear-gradient(rgba(27,35,80,.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(27,35,80,.05) 1px, transparent 1px);
+    background-size:28px 28px;
     color:var(--black);
     font-family:'Poppins',sans-serif;
     -webkit-font-smoothing:antialiased;
@@ -205,6 +209,39 @@
   }
   .cta-btn:hover{transform:translateY(-2px);box-shadow:0 18px 36px -12px rgba(30,158,90,.6);}
   footer{margin-top:24px;text-align:center;color:var(--gray-400);font-size:12px;}
+
+  .side-stat{
+    position:fixed;
+    width:155px;
+    background:#FDFBF3;
+    border:1px solid #ECE6D2;
+    border-radius:10px;
+    padding:14px 14px;
+    font-size:11.5px;
+    line-height:1.45;
+    color:var(--gray-600);
+    font-weight:500;
+    opacity:0;
+    visibility:hidden;
+    transition:opacity .4s ease;
+    box-shadow:0 6px 16px -10px rgba(15,21,48,.15);
+    z-index:5;
+    pointer-events:none;
+  }
+  .side-stat.visible{opacity:.7;visibility:visible;}
+  .side-stat .stat-num{
+    display:block;
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:18px;
+    color:#C97A9A;
+    margin-bottom:3px;
+  }
+  .side-left{left:max(10px, calc(50% - 760px));top:340px;transform:rotate(-3deg);}
+  .side-right{right:max(10px, calc(50% - 760px));top:340px;transform:rotate(3deg);}
+  @media (max-width:1620px){
+    .side-stat{display:none;}
+  }
 </style>
 </head>
 <body>
@@ -238,6 +275,15 @@
   document.getElementById('pwInput').addEventListener('keydown', e=>{ if(e.key==='Enter') tryLogin(); });
 })();
 </script>
+<div class="side-stat side-left">
+  <span class="stat-num">8,2</span>
+  Az elmúlt évben ügyfeleink átlagosan ennyi ajánlást adtak alkalmanként.
+</div>
+<div class="side-stat side-right">
+  <span class="stat-num">10/8</span>
+  10 ajánlásból 8 esetben ülünk le egyeztetni az ajánlottal.
+</div>
+
 <div class="wrap">
 
   <div class="hero">
@@ -574,6 +620,20 @@ document.querySelectorAll('.copy-btn').forEach(b=>{
     setTimeout(()=>{b.textContent='Másolás';b.classList.remove('copied');},1500);
   };
 });
+
+// Side-stat panels only appear from section 02 (Folyamat & együttműködés) onward
+(function(){
+  const trigger = document.getElementById('tananyag');
+  const panels = document.querySelectorAll('.side-stat');
+  function updateVisibility(){
+    if(!trigger) return;
+    const triggerTop = trigger.getBoundingClientRect().top + window.scrollY;
+    const show = window.scrollY + 80 > triggerTop;
+    panels.forEach(p=>p.classList.toggle('visible', show));
+  }
+  window.addEventListener('scroll', updateVisibility, {passive:true});
+  updateVisibility();
+})();
 </script>
 </body>
 </html>
